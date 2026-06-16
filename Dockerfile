@@ -44,6 +44,15 @@ RUN \
 # Remove SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
+RUN apt-get update && apt-get install -y \
+    rocm-opencl-runtime \
+    libamf-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -f render && usermod -aG render arm
+
+COPY ./scripts/docker/runsv/armui.sh /etc/service/armui/run
+
 # Add ARMui service
 RUN mkdir /etc/service/armui
 COPY ./scripts/docker/runsv/armui.sh /etc/service/armui/run
